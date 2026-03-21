@@ -145,3 +145,26 @@ Feature: Articles
         Then status 201
         And match response.user.token == "#string"
 ```
+
+### Example using Background complete cenario
+```gherkin
+Feature: Articles
+
+    Background: Create a new user - Ensure it runs once for both different username/email combinations
+        Given url 'https://conduit-api.bondaracademy.com/api/'
+        Given path 'users'
+        * def username = "karate97643@test.com"
+        * def email = "abc97632@test.com"
+        And request {"user": {"username": "#(username)" , "email": "#(email)", "password": "karate123"}}
+        When method Post
+        Then status 201
+        * def token = response.user.token
+
+    Scenario: Create a new article
+        Given header Authorization = 'Token ' + token
+        Given path 'articles'
+        And request {"article": {"title": "Bla bla111", "tagList": ["someTag"],"description": "test test", "body": "body article message"}}
+        When method Post
+        Then status 201
+        And match response.article.title == 'Bla bla111'
+```        
