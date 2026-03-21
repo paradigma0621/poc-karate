@@ -7,6 +7,10 @@ Feature: Tests for the home page
         Given path 'tags'
         When method Get
         Then status 200
+        # And match response.tags contains 'Start for Free'
+        And match response.tags contains ['Start for Free', 'Slack']
+        And match response.tags !contains 'abc123'
+        And match response.tags == "#array"
 
     Scenario: Get 10 articles from the page using parameters
         # Use case 1
@@ -22,3 +26,7 @@ Feature: Tests for the home page
         Given path 'articles'
         When method Get
         Then status 200
+        # The array returned has 10 elements
+        And match response.articles == '#[10]'
+        # The element 'articlesCount' has value = 10
+        And match response.articlesCount == 10
