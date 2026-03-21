@@ -12,16 +12,16 @@ https://conduit-api.bondaracademy.com
 ### Karate page
 https://github.com/karatelabs/karate
 
-# Main points
+## Main points
 - Multi-threaded parallel execution
 - Detailed reports and logs
 
-# Notes
-## The xyz.feature file is only executed by the mnoTest.java runner in the same folder.
-## Printing to the Console
+## Notes
+### The xyz.feature file is only executed by the mnoTest.java runner in the same folder.
+### Printing to the Console
     * print 'Username [DEBUG]:', username
     * print 'Email  [DEBUG]:', email
-## IMPORTANT
+### IMPORTANT
 The Background is executed **before every** Scenario.
 
 ## GET Scenarios
@@ -257,7 +257,7 @@ Background: Create a new user - Ensure it runs once for both different username/
     * def token = userData.tokenAuthorization
     * def articleTitle = "Some words19"
 
-# `/helpers/createUser.feature`        
+# /helpers/createUser.feature
 Feature: Create user just once
     Scenario:
         Given url 'https://conduit-api.bondaracademy.com/api/'
@@ -278,4 +278,39 @@ Feature: Create user just once
 }
 """
 * def userData = call read(featureClasspath) createUserParams
+```
+## Enviroment variables
+```js
+// karate-config.js
+  var config = { // Properties set in `config` (karate-config.js) become globally accessible variables in Karate
+	  apiUrl: 'https://conduit-api.bondaracademy.com/api/'
+  }
+
+  if (env == 'dev') { // Properties set in `config` (karate-config.js) become globally accessible variables in Karate
+    config.passwordFromConfig = 'KarateDEV123'
+  }
+  if (env == 'qa') { // Properties set in `config` (karate-config.js) become globally accessible variables in Karate
+    config.passwordFromConfig = 'KarateQA456'
+  }  
+```
+### Command line
+```
+mvn test -Dkarate.env="qa"
+```
+
+### Variables use examples
+```gherkin
+# Given url 'https://conduit-api.bondaracademy.com/api/'
+# CHANGES TO:
+Given url apiUrl
+...
+# 'passwordFromConfig' is defined in karate-config.js and is globally available via config
+And request {"user": {..."password": "#(passwordFromConfig)"}} 
+``` 
+
+### Additional declarations (pending testing)
+```js
+// karate-config.js
+var accessToken = karate.callSingle('classpath:helpers/CreateToken.feature', config).authToken
+karate.configure('headers', {Authorization: 'Token ' + accessToken})
 ```

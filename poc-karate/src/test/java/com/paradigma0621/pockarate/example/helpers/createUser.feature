@@ -6,9 +6,9 @@
 # Note: this feature is outside the files xTest.java, so do not run automatically
 Feature: Create user just once
     Scenario:
-        Given url 'https://conduit-api.bondaracademy.com/api/'
+        Given url apiUrl
         Given path 'users'
-        And request {"user": {"username": "#(username)" , "email": "#(email)", "password": "karate123"}}
+        And request {"user": {"username": "#(username)" , "email": "#(email)", "password": "#(passwordFromConfig)"}}
         * print 'Username [DEBUG]:', username
         * print 'Email  [DEBUG]:', email
         When method Post

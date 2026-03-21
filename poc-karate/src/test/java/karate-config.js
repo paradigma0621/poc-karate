@@ -4,15 +4,19 @@ function fn() {
   if (!env) {
     env = 'dev';
   }
-  var config = {
-    env: env,
-    myVarName: 'someValue'
+  var config = { // Properties set in `config` (karate-config.js) become globally accessible variables in Karate
+	  apiUrl: 'https://conduit-api.bondaracademy.com/api/'
   }
-  if (env == 'dev') {
-    // customize
-    // e.g. config.foo = 'bar';
-  } else if (env == 'e2e') {
-    // customize
+
+  if (env == 'dev') { // Properties set in `config` (karate-config.js) become globally accessible variables in Karate
+    config.passwordFromConfig = 'KarateDEV123'
   }
+  if (env == 'qa') { // Properties set in `config` (karate-config.js) become globally accessible variables in Karate
+    config.passwordFromConfig = 'KarateQA456'
+  }
+
+  //var accessToken = karate.callSingle('classpath:helpers/CreateToken.feature', config).authToken
+  //karate.configure('headers', {Authorization: 'Token ' + accessToken})
+
   return config;
 }
