@@ -1,3 +1,4 @@
+@ignore
 Feature: Articles
 
     Background: Create a new user - Ensure it runs once for both different username/email combinations

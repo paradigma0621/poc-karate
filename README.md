@@ -116,19 +116,6 @@ Scenario: Get 10 articles from the page using parameters
     And match response.articlesCount == 10
 ```
 
-
-
-{
-    "user": {
-        "id": 49394,
-        "email": "abc1234@test.com",
-        "username": "karate@test.com",
-        "bio": null,
-        "image": "https://conduit-api.bondaracademy.com/images/smiley-cyrus.jpeg",
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo0OTM5NH0sImlhdCI6MTc3NDA1NjY3NiwiZXhwIjoxNzc5MjQwNjc2fQ.O6j4axDgAEKPt8Fr5h5CuI7efYovjM-BDfRPZ2UVDkE"
-    }
-}
-
 ## POST Scenarios
 ### Simplest example
 Ensure it runs once for both different username/email combinations.
@@ -167,4 +154,52 @@ Feature: Articles
         When method Post
         Then status 201
         And match response.article.title == 'Bla bla111'
-```        
+```
+
+## Using Tags
+
+### Run / Skip Features by Tag
+
+```gherkin
+@mytagfeature
+Feature: Tests for the home page
+```
+
+Command line:
+
+```
+mvn test -Dkarate.options="--tags @mytagfeature"     # Runs only features tagged with @mytagfeature
+mvn test -Dkarate.options="--tags ~@mytagfeature"    # Skips features tagged with @mytagfeature
+```
+
+### Run / Skip Scenarios by Tag
+
+```gherkin
+@mytag
+Scenario: Get all tags
+```
+
+Command line:
+
+```
+mvn test -Dkarate.options="--tags @mytag"      # Runs only scenarios tagged with @mytag
+mvn test -Dkarate.options="--tags ~@mytag"     # Skips scenarios tagged with @mytag
+```
+
+### Ignoring Tests
+
+#### `@ignore`
+
+Use this tag to exclude a Feature or Scenario from execution.
+
+```gherkin
+@ignore
+Feature: Articles
+```
+
+or
+
+```gherkin
+@ignore
+Scenario: Get all tags
+```
