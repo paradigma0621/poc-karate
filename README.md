@@ -17,8 +17,10 @@ https://github.com/karatelabs/karate
 - Detailed reports and logs
 
 # Notes
-The xyz.feature file is only executed by the mnoTest.java runner in the same folder.
-
+## The xyz.feature file is only executed by the mnoTest.java runner in the same folder.
+## Printing to the Console
+    * print 'Username [DEBUG]:', username
+    * print 'Email  [DEBUG]:', email
 ## IMPORTANT
 The Background is executed **before every** Scenario.
 
@@ -209,4 +211,71 @@ or
 ```gherkin
 @ignore
 Scenario: Get all tags
+```
+
+## Calling others features
+
+### 📌 Organizing features in Karate
+* All **features that are part of the test suite (e.g., `mvn test`)** must be **in the same directory as the runner (`XTest.java`)**.
+* Any feature **outside this directory will not be executed automatically**.
+
+👉 **Main point:**
+**If a feature is outside the runner’s (`XTest.java`) directory, it will NOT run during the suite execution.**
+
+---
+
+### ⚙️ Call vs CallOnce
+
+* `call` → executes **every time it is invoked**
+* `callonce` → executes **only once** (usually in the `Background`)
+
+### 📦 Passing parameters
+
+* You can pass data to another feature like this:
+
+```gherkin
+* call read('feature.feature') { param: 'value' }
+```
+
+### 🧠 Final summary
+
+* ✔ Features inside the `XTest.java` folder → run in the suite
+* ❌ Features outside this folder → do not run automatically
+* 🔁 Use external features for reuse (helpers)
+* ⚡ Use `callonce` to optimize execution
+
+## Example code
+```gherkin
+Background: Create a new user - Ensure it runs once for both different username/email combinations
+    Given url 'https://conduit-api.bondaracademy.com/api/'
+    * def randomNum = Math.floor(Math.random() * 1000)
+    * def username = 'user_' + randomNum
+    * def email = 'test_' + randomNum + '@test.com'
+    * def featureClasspath = 'classpath:com/paradigma0621/pockarate/example/helpers/createUser.feature'
+    # Variables defined above to illustrate the call with arguments below
+    * def userData = call read(featureClasspath) { username: #(username), email: #(email) }
+    * def token = userData.tokenAuthorization
+    * def articleTitle = "Some words19"
+
+# `/helpers/createUser.feature`        
+Feature: Create user just once
+    Scenario:
+        Given url 'https://conduit-api.bondaracademy.com/api/'
+        Given path 'users'
+        And request {"user": {"username": "#(username)" , "email": "#(email)", "password": "karate123"}}
+        * print 'Username [DEBUG]:', username
+        * print 'Email  [DEBUG]:', email
+        When method Post
+        Then status 201
+        * def tokenAuthorization = response.user.token
+```
+```gherkin
+* def createUserParams =
+"""
+{
+  username: #(username),
+  email: #(email)
+}
+"""
+* def userData = call read(featureClasspath) createUserParams
 ```

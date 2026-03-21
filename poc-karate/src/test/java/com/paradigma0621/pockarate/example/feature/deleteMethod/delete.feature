@@ -2,8 +2,13 @@ Feature: DeleteArticles
 
     Background: Create a new user - Ensure it runs once for both different username/email combinations
         Given url 'https://conduit-api.bondaracademy.com/api/'
-        * def userData = callonce read('createUser.feature')
-        * def token = userData.token
+        * def randomNum = Math.floor(Math.random() * 1000)
+        * def username = 'user_' + randomNum
+        * def email = 'test_' + randomNum + '@test.com'
+        * def featureClasspath = 'classpath:com/paradigma0621/pockarate/example/helpers/createUser.feature'
+        # Variables defined above to illustrate the call with arguments below
+        * def userData = call read(featureClasspath) { username: #(username), email: #(email) }
+        * def token = userData.tokenAuthorization
         * def articleTitle = "Some words19"
 
     Scenario: Create and delete article
