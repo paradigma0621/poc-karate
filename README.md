@@ -314,3 +314,24 @@ And request {"user": {..."password": "#(passwordFromConfig)"}}
 var accessToken = karate.callSingle('classpath:helpers/CreateToken.feature', config).authToken
 karate.configure('headers', {Authorization: 'Token ' + accessToken})
 ```
+
+## Multi-line expressions
+```gherkin
+    And request {"article": {"title": "Bla bla111", "tagList": ["someTag"],"description": "test test", "body": "body article message"}}
+```    
+Instead of inline JSON, you can use a multiline request:
+```gherkin
+    And request
+    """
+    {
+        "article": {
+            "title": "Bla bla111",
+            "tagList": [
+                "someTag"
+            ],
+            "description": "test test",
+            "body": "body article message"
+        }
+    }
+    """
+```

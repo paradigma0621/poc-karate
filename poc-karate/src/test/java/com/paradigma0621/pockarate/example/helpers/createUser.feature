@@ -8,7 +8,16 @@ Feature: Create user just once
     Scenario:
         Given url apiUrl
         Given path 'users'
-        And request {"user": {"username": "#(username)" , "email": "#(email)", "password": "#(passwordFromConfig)"}}
+        And request
+        """
+        {
+            "user": {
+                "username": "#(username)",
+                "email": "#(email)",
+                "password": "#(passwordFromConfig)"
+            }
+        }
+        """
         * print 'Username [DEBUG]:', username
         * print 'Email  [DEBUG]:', email
         When method Post
