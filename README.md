@@ -121,6 +121,35 @@ Scenario: Get 10 articles from the page using parameters
     And match response.articlesCount == 10
 ```
 
+#### Other examples
+```gherkin
+    And match response == { "articles": "#array", "articlesCount": 10}
+
+    # Creation date year = 2024?
+    And match response.articles[0].createdAt contains '2024'
+
+    # At least one 'favoritesCount' value is 464
+    And match response.articles[*].favoritesCount contains 464
+
+    # At least one 'author.bio' is null
+    And match response.articles[*].author.bio contains null
+
+    # At least one 'bio' field in the response is null (not only 'author.bio')
+    And match response..bio contains null
+
+    # All 'following' fields in the response are false
+    And match each response..following == false
+
+    # All 'following' fields in the response are booleans
+    And match each response..following == '#boolean'
+
+    # All 'favoritesCount' fields in the response are numbers
+    And match each response..favoritesCount == '#number'
+
+    # The 'bio' field may be missing, null, or a string
+    And match each response..bio == '##string'
+```
+
 ## POST Scenarios
 ### Simplest example
 Ensure it runs once for both different username/email combinations.
